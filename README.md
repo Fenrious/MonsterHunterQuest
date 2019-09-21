@@ -5,10 +5,10 @@ Started this project soon after returning to programming. Planning to add a
 few more things before officially being finished with the project.
 
 Project Background: All of the artwork in the game was done by me using GNU 
-Image Manipulation Program, but the concepts behind the work all belong to 
-Capcom. The game has heavy influences from Monster Hunter Tri and Monster 
-Hunter: World. I tried to incorporate as many elements of the Monster Hunter 
-series as I could.
+Image Manipulation Program, but the concepts behind the work  and the music 
+all belong to Capcom. The game has heavy influences from Monster Hunter Tri
+and Monster Hunter: World. I tried to incorporate as many elements of the
+Monster Hunter series as I could.
 
 Game Description:
 The goal of each session in the game is to defeat the primary monster of the
@@ -27,3 +27,4 @@ helps to make it easier to find the monster. Other monsters will merely wander
 about. Other monsters can be killed for raw meat which can be cooked and eaten
 to increase maximum stamina.
 
+Status: Playable, but still working on adding some more content.
