@@ -1,7 +1,7 @@
 /**
  * This class creates a customizable attack used by monsters.
  *
- * Date Last Modified: 06 / 28 / 2019
+ * Date Last Modified: 09 / 30 / 2019
  *
  * @author Shirley Krogel
  */
@@ -62,6 +62,10 @@ public class Attack {
      */
     public void setGrazeStatus(Status graze) {
         this.grazeStatus = graze;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**

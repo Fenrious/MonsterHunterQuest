@@ -32,7 +32,7 @@ import java.util.Scanner;
  * This program creates an interactable Monster Hunter adventure using Java GUI. This particular class
  * handles the bulk of the overall project folder.
  *
- * Date Last Modified: 09 / 20 / 2019
+ * Date Last Modified: 10 / 01 / 2019
  *
  * @author Shirley Krogel
  */
@@ -112,6 +112,9 @@ public class MonsterHunter extends Application {
     private Button greatJagrasButton = new Button("Great Jagras");
     private Text greatJagrasDescription = new Text("The monster for beginners. Fight this monster to learn the " +
             "basics of Monster Hunter.");
+    private Button jyuratodusButton = new Button("Jyuratodus");
+    private Text jyuratodusDescription = new Text("A slightly more advanced monster that specializes in mud-based " +
+            "attacks.");
 
     private Text chooseDifficulty = new Text("Choose a difficulty:");
     private Button easy = new Button("Easy Mode");
@@ -776,7 +779,14 @@ public class MonsterHunter extends Application {
         greatJagrasBox.getChildren().addAll(greatJagrasButton, greatJagrasDescription);
         greatJagrasBox.setAlignment(Pos.CENTER);
         greatJagrasBox.setSpacing(10);
-        monsterList.getChildren().addAll(chooseMonster, greatJagrasBox);
+        HBox jyuratodusBox = new HBox();
+        jyuratodusDescription.wrappingWidthProperty().bind(monsterPane.widthProperty().divide(1.5));
+        jyuratodusDescription.setFont(Font.font("Verdana", FontPosture.ITALIC, 20));
+        standardButtonFormatting(jyuratodusButton, monsterPane);
+        jyuratodusBox.getChildren().addAll(jyuratodusButton, jyuratodusDescription);
+        jyuratodusBox.setAlignment(Pos.CENTER);
+        jyuratodusBox.setSpacing(10);
+        monsterList.getChildren().addAll(chooseMonster, greatJagrasBox, jyuratodusBox);
         chooseMonster.setFont(Font.font("Verdana", FontPosture.ITALIC, 40));
         chooseMonster.setFill(Color.RED);
         monsterList.setAlignment(Pos.CENTER);
@@ -1148,6 +1158,13 @@ public class MonsterHunter extends Application {
             currentScene.setRoot(difficultyPane);
         });
 
+        jyuratodusButton.setOnAction(e -> {
+            questMonster = null;
+            questMonster = new Jyuratodus(7, hunter, this);
+            monsterView.setImage(questMonster.getCurrentSide(hunter.getPosition()));
+            currentScene.setRoot(difficultyPane);
+        });
+
         easy.setOnAction(e -> {
             questMonster.easyMode();
             currentScene.setRoot(mapSelectionPane);
@@ -1240,36 +1257,40 @@ public class MonsterHunter extends Application {
         });
 
         dashLeft.setOnAction(e -> {
-            if (hunter.checkStaminaCost(25)) {
-                final String position = hunter.getPosition();
-                switch (position) {
-                    case "Front": {
-                        hunter.setPosition("Back");
-                        break;
+            if (!hunter.isMuddy()) {
+                if (hunter.checkStaminaCost(25)) {
+                    final String position = hunter.getPosition();
+                    switch (position) {
+                        case "Front": {
+                            hunter.setPosition("Back");
+                            break;
+                        }
+                        case "Left": {
+                            hunter.setPosition("Right");
+                            break;
+                        }
+                        case "Back": {
+                            hunter.setPosition("Front");
+                            break;
+                        }
+                        case "Right": {
+                            hunter.setPosition("Left");
+                            break;
+                        }
+                        default: {
+                            System.out.println("Invalid Position: " + hunter.getPosition());
+                        }
                     }
-                    case "Left": {
-                        hunter.setPosition("Right");
-                        break;
-                    }
-                    case "Back": {
-                        hunter.setPosition("Front");
-                        break;
-                    }
-                    case "Right": {
-                        hunter.setPosition("Left");
-                        break;
-                    }
-                    default: {
-                        System.out.println("Invalid Position: " + hunter.getPosition());
-                    }
+                    updateLog(hunter.getName() + " dashed to the left.");
+                    hunter.setStamina(hunter.getStamina() - 25);
+                    hunter.checkBleeding();
+                    monsterView.setImage(targetMonster.getCurrentSide(hunter.getPosition()));
+                    turn();
+                } else {
+                    updateLog(hunter.getName() + " did not have enough stamina to dash.");
                 }
-                updateLog(hunter.getName() + " dashed to the left.");
-                hunter.setStamina(hunter.getStamina() - 25);
-                hunter.checkBleeding();
-                monsterView.setImage(targetMonster.getCurrentSide(hunter.getPosition()));
-                turn();
             } else {
-                updateLog(hunter.getName() + " did not have enough stamina to dash.");
+                updateLog(hunter.getName() + " is covered in mud and can't move quickly!");
             }
         });
 
@@ -1303,36 +1324,40 @@ public class MonsterHunter extends Application {
         });
 
         dashRight.setOnAction(e -> {
-            if (hunter.checkStaminaCost(25)) {
-                final String position = hunter.getPosition();
-                switch (position) {
-                    case "Front": {
-                        hunter.setPosition("Back");
-                        break;
+            if (!hunter.isMuddy()) {
+                if (hunter.checkStaminaCost(25)) {
+                    final String position = hunter.getPosition();
+                    switch (position) {
+                        case "Front": {
+                            hunter.setPosition("Back");
+                            break;
+                        }
+                        case "Back": {
+                            hunter.setPosition("Front");
+                            break;
+                        }
+                        case "Left": {
+                            hunter.setPosition("Right");
+                            break;
+                        }
+                        case "Right": {
+                            hunter.setPosition("Left");
+                            break;
+                        }
+                        default: {
+                            System.out.println("Invalid Position: " + hunter.getPosition());
+                        }
                     }
-                    case "Back": {
-                        hunter.setPosition("Front");
-                        break;
-                    }
-                    case "Left": {
-                        hunter.setPosition("Right");
-                        break;
-                    }
-                    case "Right": {
-                        hunter.setPosition("Left");
-                        break;
-                    }
-                    default: {
-                        System.out.println("Invalid Position: " + hunter.getPosition());
-                    }
+                    updateLog(hunter.getName() + " dashed to the right.");
+                    hunter.setStamina(hunter.getStamina() - 25);
+                    hunter.checkBleeding();
+                    monsterView.setImage(targetMonster.getCurrentSide(hunter.getPosition()));
+                    turn();
+                } else {
+                    updateLog(hunter.getName() + " did not have enough stamina to dash.");
                 }
-                updateLog(hunter.getName() + " dashed to the right.");
-                hunter.setStamina(hunter.getStamina() - 25);
-                hunter.checkBleeding();
-                monsterView.setImage(targetMonster.getCurrentSide(hunter.getPosition()));
-                turn();
             } else {
-                updateLog(hunter.getName() + " did not have enough stamina to dash.");
+                updateLog(hunter.getName() + " is covered in mud and can't move quickly!");
             }
         });
 
