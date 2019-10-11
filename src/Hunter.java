@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * This class creates a hunter.
  *
- * Date Last Modified: 08 / 20 / 2019
+ * Date Last Modified: 10 / 03 / 2019
  *
  * @author Shirley Krogel
  */
@@ -219,7 +219,7 @@ public class Hunter {
         }
     }
 
-    public void checkBleeding(){
+    public void checkBleeding() {
         if(bleeding) {
             if (bleeding && bleedTick <= 30) {
                 hp -= 5;
@@ -235,7 +235,21 @@ public class Hunter {
         }
     }
 
-    private void checkMudBlight(){
+    public void tickBleeding() {
+        if(bleeding) {
+            if (bleeding && bleedTick <= 30) {
+                bleedTick++;
+            } else {
+                bleeding = false;
+                bleedTick = 0;
+                mh.updateLog(name + "'s wound is closing up.");
+            }
+        } else {
+            bleedTick = 0;
+        }
+    }
+
+    private void checkMudBlight() {
         if (muddy) {
             if (muddy && mudBlightTick <= 4) {
                 mudBlightTick++;
@@ -353,5 +367,6 @@ public class Hunter {
         poisonDamage();
         burnDamage();
         checkMudBlight();
+        tickBleeding();
     }
 }

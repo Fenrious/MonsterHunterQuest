@@ -32,7 +32,7 @@ import java.util.Scanner;
  * This program creates an interactable Monster Hunter adventure using Java GUI. This particular class
  * handles the bulk of the overall project folder.
  *
- * Date Last Modified: 10 / 01 / 2019
+ * Date Last Modified: 10 / 10 / 2019
  *
  * @author Shirley Krogel
  */
@@ -72,6 +72,7 @@ public class MonsterHunter extends Application {
     private ImageView titleScreenImageView = new ImageView(titleScreenImage);
     private Button play = new Button("Start Your Quest");
     private Button help = new Button("Look at the Monster Hunting Guidebook");
+    private Button option = new Button("Change Your Settings");
     private Button quit = new Button("Exit the Game");
     private Button huntAgain = new Button("Hunt Another Monster");
 
@@ -195,6 +196,7 @@ public class MonsterHunter extends Application {
     private Button craftAntidote = new Button("Craft an Antidote (Requires: Antidote Flower (0) & " +
             "Blue Mushroom (0))");
     private Button cookMeat = new Button("Cook a steak (Requires: Raw Meat (0))");
+    private Button craftBandage = new Button("Craft a Bandage (Requires: 2 Herbs (0))");
     private Button exitCrafting = new Button("Stop Crafting");
 
     private Text locationTitle = new Text();
@@ -211,6 +213,7 @@ public class MonsterHunter extends Application {
     private Button megaPotion = new Button();
     private Button antidote = new Button();
     private Button cookedMeat = new Button();
+    private Button bandage = new Button();
 
     private Text endTitle = new Text();
     private Text turns = new Text();
@@ -342,6 +345,7 @@ public class MonsterHunter extends Application {
         megaPotion.setText(hunter.getInventory().getItem("Mega Potion").toString());
         antidote.setText(hunter.getInventory().getItem("Antidote").toString());
         cookedMeat.setText(hunter.getInventory().getItem("Cooked Meat").toString());
+        bandage.setText(hunter.getInventory().getItem("Bandage").toString());
         // Craftables
         craftPotion.setText("Craft a Potion (Requires: " + hunter.getInventory().getItem("Herb").toString() +
                 " & " + hunter.getInventory().getItem("Blue Mushroom").toString() + ")");
@@ -352,6 +356,8 @@ public class MonsterHunter extends Application {
                 .toString() + " & " + hunter.getInventory().getItem("Blue Mushroom").toString() + ")");
         cookMeat.setText("Cook a steak (Requires: " + hunter.getInventory().getItem("Raw Meat").toString() +
                 " & " + hunter.getInventory().getItem("Herb").toString() + ")");
+        craftBandage.setText("Craft a Bandage (Requires: 2 " + hunter.getInventory().getItem("Herb").toString() +
+                ")");
         // Misc.
         locationTitle.setText("Currently in Area " + hunter.getCurrentLocation() + ".");
         checkVictoryDefeat();
@@ -530,6 +536,13 @@ public class MonsterHunter extends Application {
                     currentMosters.add(areaMap.getZone(openLocations.get(randomLocation) - 1).getMonster());
                     openLocations.remove(randomLocation);
                 }
+                if (hunter.getKnownMonsters().get(randomMonster).equals("Jyuratodus") &&
+                        !containsMonster("Jyuratodus")) {
+                    areaMap.getZone(openLocations.get(randomLocation) - 1).setMonster(
+                            new Jyuratodus(openLocations.get(randomLocation), hunter, this));
+                    currentMosters.add(areaMap.getZone(openLocations.get(randomLocation) - 1).getMonster());
+                    openLocations.remove(randomLocation);
+                }
                 spawnTimer = 0;
             } else {
                 spawnTimer++;
@@ -621,8 +634,6 @@ public class MonsterHunter extends Application {
         this.stage = primaryStage; // Letting the stage be changed by outside methods.
 
         // Options menu
-        Stage optionStage = new Stage();
-        optionStage.setTitle("Options Menu");
         StackPane optionPane = new StackPane();
         VBox optionVBox = new VBox();
         Text optionTitle = new Text("Options:");
@@ -638,11 +649,16 @@ public class MonsterHunter extends Application {
         mVSlider.setMinorTickCount(5);
         mVSlider.setBlockIncrement(0.10);
         mVHBox.getChildren().addAll(mVLabel, mVSlider);
-        optionVBox.getChildren().addAll(optionTitle, mVHBox);
+        Button optionsToMenu = new Button("Return to the Menu");
+        standardButtonFormatting(optionsToMenu, optionPane);
+        Button optionsToGame = new Button("Return to the Game");
+        standardButtonFormatting(optionsToGame, optionPane);
+        Text optionInfo = new Text("Press O during the game to open the Option menu again.");
+        optionInfo.setFont(Font.font("Verdana", FontPosture.ITALIC, 25));
+        optionVBox.getChildren().addAll(optionTitle, mVHBox, optionsToMenu, optionInfo);
+        optionVBox.spacingProperty().bind(stage.heightProperty().divide(5));
         optionPane.getChildren().add(optionVBox);
-        Scene optionScene = new Scene(optionPane, 500, 500);
-        optionStage.setScene(optionScene);
-        optionStage.setResizable(false);
+
 
         optionVBox.setAlignment(Pos.TOP_CENTER);
         mVHBox.setAlignment(Pos.CENTER);
@@ -665,7 +681,7 @@ public class MonsterHunter extends Application {
         backgroundTitle.seek(Duration.ZERO);
         backgroundTitle.play();
 
-        // Dropshadow for text that needs it.
+        // Drop shadow for text that needs it.
         DropShadow ds = new DropShadow();
         ds.setOffsetY(10.0f);
         ds.setColor(Color.color(0.4f, 0.4f, 0.4f));
@@ -682,8 +698,9 @@ public class MonsterHunter extends Application {
         VBox options = new VBox();
         titleButtonFormatting(play);
         titleButtonFormatting(help);
+        titleButtonFormatting(option);
         titleButtonFormatting(quit);
-        options.getChildren().addAll(play, help, quit);
+        options.getChildren().addAll(play, help, option, quit);
         options.setSpacing(10);
         options.setAlignment(Pos.CENTER);
         titleVBox.getChildren().addAll(title, options);
@@ -894,19 +911,23 @@ public class MonsterHunter extends Application {
         gatherViewer.prefWidthProperty().bind(areaPane.widthProperty());
         gatherViewer.prefHeightProperty().bind(areaPane.heightProperty().divide(5 / 3));
 
+        // Passive Actions
         gameButtonFormatting(gather, areaPane);
         gameButtonFormatting(crafting, areaPane);
         gameButtonFormatting(map, areaPane);
         gameButtonFormatting(passiveSharp, areaPane);
         passiveVBox.getChildren().addAll(gather, crafting, map, passiveSharp);
 
+        // Usable Items
         gameButtonFormatting(herb, areaPane);
         gameButtonFormatting(potion, areaPane);
         gameButtonFormatting(megaPotion, areaPane);
         gameButtonFormatting(antidote, areaPane);
         gameButtonFormatting(cookedMeat, areaPane);
-        inventoryVBox.getChildren().addAll(herb, potion, megaPotion, antidote, cookedMeat);
+        gameButtonFormatting(bandage, areaPane);
+        inventoryVBox.getChildren().addAll(herb, potion, megaPotion, antidote, cookedMeat, bandage);
 
+        // Combat Actions
         gameButtonFormatting(attack, areaPane);
         gameButtonFormatting(sharpen, areaPane);
         gameButtonFormatting(guard, areaPane);
@@ -980,9 +1001,11 @@ public class MonsterHunter extends Application {
         craftAntidote.prefWidthProperty().bind(areaPane.widthProperty().divide(1.5));
         gameButtonFormatting(cookMeat, areaPane);
         cookMeat.prefWidthProperty().bind(areaPane.widthProperty().divide(1.5));
+        gameButtonFormatting(craftBandage, areaPane);
+        craftBandage.prefWidthProperty().bind(areaPane.widthProperty().divide(1.5));
         gameButtonFormatting(exitCrafting, areaPane);
         exitCrafting.prefWidthProperty().bind(areaPane.widthProperty().divide(1.5));
-        craftVBox.getChildren().addAll(craftPotion, craftMegaPotion, craftAntidote, cookMeat, exitCrafting);
+        craftVBox.getChildren().addAll(craftPotion, craftMegaPotion, craftAntidote, cookMeat, craftBandage, exitCrafting);
 
         // Creates a map screen to display the game map and neighboring areas to travel to.
         StackPane mapPane = new StackPane();
@@ -1056,10 +1079,17 @@ public class MonsterHunter extends Application {
         // Title Screen Buttons
         play.setOnAction(e -> {
             currentScene.setRoot(namePane);
+            optionVBox.getChildren().remove(optionsToMenu);
+            optionVBox.getChildren().remove(optionInfo);
+            optionVBox.getChildren().add(optionsToGame);
         });
 
         help.setOnAction(e -> {
             currentScene.setRoot(helpPane);
+        });
+
+        option.setOnAction(e -> {
+            currentScene.setRoot(optionPane);
         });
 
         quit.setOnAction(e -> {
@@ -1077,8 +1107,8 @@ public class MonsterHunter extends Application {
                     "heal the hunter for a substantial amount. These are what can really save you in a pinch as " +
                     "they heal far more than a simple potion or herb. Antidotes cure the hunter of poison. Poison " +
                     "can rack up a large amount of damage if left unchecked for a long time. Poison will eventually " +
-                    "wear off on its own, but it is ill advised to leave it alone for so long. See " +
-                    "'Gathering' for more information on gathering).");
+                    "wear off on its own, but it is ill advised to leave it alone for so long. (See " +
+                    "'Gathering' for more information on gathering.)");
         });
 
         gatheringHelp.setOnAction(e -> {
@@ -1091,8 +1121,8 @@ public class MonsterHunter extends Application {
                     "amount of antitoxins that can be utilized by the hunter to create antidotes. Blue " +
                     "Mushrooms are used as a base for basic potions, like potions and antidotes. Herbs have " +
                     "natural healing properties and are used to craft the basic healing potion. Honey " +
-                    "contains an enzyme which enhances the healing power of potions. See 'Crafting' for " +
-                    "more information on crafting.");
+                    "contains an enzyme which enhances the healing power of potions. (See 'Crafting' for " +
+                    "more information on crafting.)");
         });
 
         hunterHelp.setOnAction(e -> {
@@ -1125,6 +1155,15 @@ public class MonsterHunter extends Application {
 
         cancelHelp.setOnAction(e -> {
             currentScene.setRoot(titlePane);
+        });
+
+        // Options menu buttons
+        optionsToMenu.setOnAction(e -> {
+            currentScene.setRoot(titlePane);
+        });
+
+        optionsToGame.setOnAction(e -> {
+            currentScene.setRoot(areaPane);
         });
 
         // Initial selection buttons
@@ -1424,6 +1463,10 @@ public class MonsterHunter extends Application {
             hunter.getInventory().getItem("Cooked Meat").craftItem(this);
         });
 
+        craftBandage.setOnAction(e -> {
+            hunter.getInventory().getItem("Bandage").craftItem(this);
+        });
+
         exitCrafting.setOnAction(e -> {
             optionViewer.getChildren().clear();
             optionViewer.getChildren().addAll(passiveVBox, inventoryVBox);
@@ -1458,6 +1501,11 @@ public class MonsterHunter extends Application {
 
         cookedMeat.setOnAction(e -> {
             hunter.getInventory().getItem("Cooked Meat").useItem(this);
+            updateStatus();
+        });
+
+        bandage.setOnAction(e -> {
+            hunter.getInventory().getItem("Bandage").useItem(this);
             updateStatus();
         });
 
@@ -1609,8 +1657,8 @@ public class MonsterHunter extends Application {
         });
 
         currentScene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.O && currentScene.getRoot() != namePane) {
-                optionStage.show();
+            if (e.getCode() == KeyCode.O && currentScene.getRoot().equals(areaPane)) {
+                currentScene.setRoot(optionPane);
             }
         });
 

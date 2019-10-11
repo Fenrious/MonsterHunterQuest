@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * This class creates an inventory for tracking how much a hunter has of each item.
  *
- * Date Last Modified: 06 / 28 / 2019
+ * Date Last Modified: 10 / 10 / 2019
  *
  * @author Shirley Krogel
  */
@@ -17,6 +17,7 @@ public class Inventory {
         inventory.add(new MegaPotion());
         inventory.add(new Antidote());
         inventory.add(new CookedMeat());
+        inventory.add(new Bandage());
         inventory.add(new HerbInventory());
         inventory.add(new AntidoteFlowerInventory());
         inventory.add(new BlueMushroomInventory());
