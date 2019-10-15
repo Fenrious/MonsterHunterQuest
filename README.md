@@ -27,4 +27,8 @@ helps to make it easier to find the monster. Other monsters will merely wander
 about. Other monsters can be killed for raw meat which can be cooked and eaten
 to increase maximum stamina.
 
-Status: Playable, but still working on adding some more content.
+Status: Finished. Focusing on other projects now.
+
+Added Disclaimer: I do not work for or with Capcom at this time. This is a 
+fan-game I made to help give me a really positive experience with coding that
+was not an assignment.
