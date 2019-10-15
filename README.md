@@ -1,11 +1,9 @@
 # MonsterHunterQuest
-My first game in any programming language. Exploring Javafx through practice.
-
-Started this project soon after returning to programming. Planning to add a 
-few more things before officially being finished with the project.
+My first game in any programming language. I wanted to explore Javafx 
+through practice. I started this project soon after returning to programming.
 
 Project Background: All of the artwork in the game was done by me using GNU 
-Image Manipulation Program, but the concepts behind the work  and the music 
+Image Manipulation Program, but the concepts behind the work and the music 
 all belong to Capcom. The game has heavy influences from Monster Hunter Tri
 and Monster Hunter: World. I tried to incorporate as many elements of the
 Monster Hunter series as I could.
