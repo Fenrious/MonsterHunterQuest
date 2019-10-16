@@ -30,3 +30,6 @@ Status: Finished. Focusing on other projects now.
 Added Disclaimer: I do not work for or with Capcom at this time. This is a 
 fan-game I made to help give me a really positive experience with coding that
 was not an assignment.
+
+For those that just want to play the game, you just need to install the 
+MonsterHunter.jar file then double click on it in your files.
